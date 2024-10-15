@@ -8,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
+// Add Controller Services
+builder.Services.AddControllers();
+builder.Services.AddApiVersioning();
+
 // Register the Db context
 builder.Services.AddDbContext<Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -27,6 +31,8 @@ else
 }
 
 app.UseHttpsRedirection();
+
+app.MapControllers();
 
 app.UseStaticFiles();
 app.UseAntiforgery();

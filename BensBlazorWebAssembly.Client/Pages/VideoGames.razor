@@ -1,0 +1,91 @@
+﻿@page "/videogames";
+@using BensBlazorWebAssembly.Client.Services;
+@using BensBlazorWebAssembly.Common.Entities;
+
+
+<h3>Video Games</h3>
+
+@if (_videoGameService ==  null)
+{
+    <em>loading...</em>
+}
+else
+{
+   
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Platform</th>
+                <th>Age Restriction</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var game in games)
+            {
+                <tr>
+                    <td>@game.Title</td>
+                    <td>@game.Genre</td>
+                    <td>@game.Platform</td>
+                    <td>@game.AgeRestriction</td>
+                    <td>
+                        <button class="btn btn-primary">Edit</button>
+                        <a class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                @* add a row where the user can add a new entry *@
+                <tr>
+                    <td><input type="text" class="form-control" @bind="newItem.Title" placeholder="Title" /></td>
+                    <td><input type="text" class="form-control" @bind="newItem.Genre" placeholder="Genre" /></td>
+                    <td><input type="text" class="form-control" @bind="newItem.Platform" placeholder="Platform" /></td>
+                    <td><input type="text" class="form-control" @bind="newItem.AgeRestriction" placeholder="Age Restriction" /></td>
+                    <td><button class="btn btn-success">Add</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+@code {
+    [Inject]
+    private IVideoGameService? _videoGameService { get; set; }
+
+    private IEnumerable<VideoGame>? games;
+    private VideoGame newItem = new VideoGame();
+
+    protected override async Task OnInitializedAsync()
+    {
+        games = await _videoGameService.GetVideoGamesAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await _videoGameService.GetVideoGamesAsync();
+            StateHasChanged();
+        }
+    }
+
+    protected async Task AddVideoGameAsync()
+    {
+        await _videoGameService.AddVideoGameAsync(newItem);
+        newItem = new VideoGame();
+        games = await _videoGameService.GetVideoGamesAsync();
+    }
+
+    protected async Task DeleteVideoGameAsync(int id)
+    {
+        await _videoGameService.DeleteVideoGameAsync(id);
+        games = await _videoGameService.GetVideoGamesAsync();
+    }
+
+    protected async Task EditVideoGameAsync(int id)
+    {
+        // open a modal dialog to edit the video game
+    }
+
+}

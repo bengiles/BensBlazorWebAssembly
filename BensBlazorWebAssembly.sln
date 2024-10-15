@@ -3,11 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BensBlazorWebAssembly", "BensBlazorWebAssembly\BensBlazorWebAssembly.csproj", "{8E49C7A3-DC5A-425D-AB7E-9041D90BB83D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BensBlazorWebAssembly", "BensBlazorWebAssembly\BensBlazorWebAssembly.csproj", "{8E49C7A3-DC5A-425D-AB7E-9041D90BB83D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BensBlazorWebAssembly.Client", "BensBlazorWebAssembly.Client\BensBlazorWebAssembly.Client.csproj", "{8E2E5C65-05B6-4C1E-AF26-29A6588C499C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BensBlazorWebAssembly.Client", "BensBlazorWebAssembly.Client\BensBlazorWebAssembly.Client.csproj", "{8E2E5C65-05B6-4C1E-AF26-29A6588C499C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{840CD957-C191-4A6A-9F09-82BDC63AFAC4} = {840CD957-C191-4A6A-9F09-82BDC63AFAC4}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BensBlazorWebAssembly.Common", "..\BensBlazorWebAssembly.Common\BensBlazorWebAssembly.Common.csproj", "{840CD957-C191-4A6A-9F09-82BDC63AFAC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BensBlazorWebAssembly.Common", "..\BensBlazorWebAssembly.Common\BensBlazorWebAssembly.Common.csproj", "{840CD957-C191-4A6A-9F09-82BDC63AFAC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

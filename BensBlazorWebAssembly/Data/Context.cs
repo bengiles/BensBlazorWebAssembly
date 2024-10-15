@@ -32,6 +32,7 @@ namespace BensBlazorWebAssembly.Data
             listOfGames.Add(new VideoGame { Id = 3, Title = "God of War", Genre = "Action", Platform = Common.Enums.Platform.PS4, AgeRestriction = Common.Enums.AgeRestriction.Eighteen });
             listOfGames.Add(new VideoGame { Id = 4, Title = "Fortnite", Genre = "Battle Royale", Platform = Common.Enums.Platform.Android, AgeRestriction = Common.Enums.AgeRestriction.Twelve });
             listOfGames.Add(new VideoGame { Id = 5, Title = "Minecraft", Genre = "Sandbox", Platform = Common.Enums.Platform.Windows, AgeRestriction = Common.Enums.AgeRestriction.Seven });
+            listOfGames.Add(new VideoGame { Id = 6, Title = "Roblox", Genre = "Sandbox", Platform = Common.Enums.Platform.Windows, AgeRestriction = Common.Enums.AgeRestriction.None });
             return listOfGames;
         }
     }
