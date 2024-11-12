@@ -2,6 +2,7 @@
 @using BensBlazorWebAssembly.Client.Services;
 @using BensBlazorWebAssembly.Common.Entities;
 @using BensBlazorWebAssembly.Common.Enums;
+@using Blazored.Toast.Services;
 @rendermode InteractiveWebAssembly
 
 
@@ -73,7 +74,8 @@ else
 }
 
 @code {
-   
+    [Inject]
+    public IToastService _toastService { get; set; }   
     [Inject]
     private IVideoGameService? _videoGameService { get; set; }
 
@@ -109,13 +111,13 @@ else
         var success = await _videoGameService.DeleteVideoGameAsync(id);
         if (success)
         {
-          //  _toastService.ShowSuccess("Video game deleted successfully");
+            _toastService.ShowSuccess("Video game deleted successfully");
             games = await _videoGameService.GetVideoGamesAsync();
             StateHasChanged();
         }
         else
         {
-           // _toastService.ShowError("Failed to delete video game");
+            _toastService.ShowError("Failed to delete video game");
         }
 
     }

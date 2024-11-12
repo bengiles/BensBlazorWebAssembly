@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using BensBlazorWebAssembly.Client.Api;
+using Blazored.Toast;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,7 @@ var environment = builder.Environment;
 
 //  ADD HTTP CLIENT
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7093/") });
-
+builder.Services.AddBlazoredToast();
 
 // Register the VideoGameService
 builder.Services.AddScoped<IRestSharpHelper, RestSharpHelper>();

@@ -88,6 +88,7 @@ namespace BensBlazorWebAssembly.Client.Api
                         await client.DeleteAsync(request);
                         return true;
                 }
+                return true;
             }
             catch (Exception ex)
             {
