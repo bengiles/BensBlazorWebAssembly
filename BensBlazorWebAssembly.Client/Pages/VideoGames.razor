@@ -1,17 +1,19 @@
 ﻿@page "/videogames";
 @using BensBlazorWebAssembly.Client.Services;
 @using BensBlazorWebAssembly.Common.Entities;
+@using BensBlazorWebAssembly.Common.Enums;
+@rendermode InteractiveWebAssembly
 
 
 <h3>Video Games</h3>
 
-@if (_videoGameService ==  null)
+@if (games == null)
 {
     <em>loading...</em>
 }
 else
 {
-   
+
     <table class="table">
         <thead>
             <tr>
@@ -25,31 +27,53 @@ else
         <tbody>
             @foreach (var game in games)
             {
-                <tr>
+                <tr @onclick="()=>OpenGamePage(game.Id)">
                     <td>@game.Title</td>
                     <td>@game.Genre</td>
                     <td>@game.Platform</td>
                     <td>@game.AgeRestriction</td>
                     <td>
-                        <button class="btn btn-primary">Edit</button>
-                        <a class="btn btn-danger">Delete</a>
+                        <button class="btn btn-primary" @onclick="()=>OpenGamePage(game.Id)">Edit</button>
+                        <a class="btn btn-danger" @onclick="()=>DeleteVideoGameAsync(game.Id)">Delete</a>
                     </td>
                 </tr>
-                @* add a row where the user can add a new entry *@
-                <tr>
-                    <td><input type="text" class="form-control" @bind="newItem.Title" placeholder="Title" /></td>
-                    <td><input type="text" class="form-control" @bind="newItem.Genre" placeholder="Genre" /></td>
-                    <td><input type="text" class="form-control" @bind="newItem.Platform" placeholder="Platform" /></td>
-                    <td><input type="text" class="form-control" @bind="newItem.AgeRestriction" placeholder="Age Restriction" /></td>
-                    <td><button class="btn btn-success">Add</button></td>
-                </tr>
             }
+            @* add a row where the user can add a new entry *@
+            <tr>
+                <td><input type="text" class="form-control" @bind="newItem.Title" placeholder="Title" /></td>
+                <td><input type="text" class="form-control" @bind="newItem.Genre" placeholder="Genre" /></td>
+                <td>
+                    <div class="form-group">
+
+                        <InputSelect id="platform" @bind-Value="newItem.Platform">
+                            @foreach (var platform in Enum.GetValues(typeof(Platform)))
+                            {
+                                <option value="@platform">@platform</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+
+                        <InputSelect id="ageRestriction" @bind-Value="newItem.AgeRestriction">
+                            @foreach (var ageRestriction in Enum.GetValues(typeof(AgeRestriction)))
+                            {
+                                <option value="@ageRestriction">@ageRestriction</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </td>
+
+                <td><button class="btn btn-success" @onclick="async () => {await AddVideoGameAsync();}">Add</button></td>
+            </tr>
         </tbody>
     </table>
 
 }
 
 @code {
+   
     [Inject]
     private IVideoGameService? _videoGameService { get; set; }
 
@@ -70,22 +94,39 @@ else
         }
     }
 
-    protected async Task AddVideoGameAsync()
+    public async Task AddVideoGameAsync()
     {
         await _videoGameService.AddVideoGameAsync(newItem);
+        // reset the newItem
         newItem = new VideoGame();
+        // refresh the list of video games
         games = await _videoGameService.GetVideoGamesAsync();
+        StateHasChanged();
     }
 
-    protected async Task DeleteVideoGameAsync(int id)
+    public async Task DeleteVideoGameAsync(int id)
     {
-        await _videoGameService.DeleteVideoGameAsync(id);
-        games = await _videoGameService.GetVideoGamesAsync();
+        var success = await _videoGameService.DeleteVideoGameAsync(id);
+        if (success)
+        {
+          //  _toastService.ShowSuccess("Video game deleted successfully");
+            games = await _videoGameService.GetVideoGamesAsync();
+            StateHasChanged();
+        }
+        else
+        {
+           // _toastService.ShowError("Failed to delete video game");
+        }
+
     }
 
-    protected async Task EditVideoGameAsync(int id)
+    public async Task EditVideoGameAsync(int id)
     {
         // open a modal dialog to edit the video game
     }
 
+    public void OpenGamePage(int Id)
+    {
+        var x = Id;
+    }
 }

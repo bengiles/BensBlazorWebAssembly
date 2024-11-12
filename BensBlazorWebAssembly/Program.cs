@@ -1,6 +1,11 @@
+using BensBlazorWebAssembly.Client.Services;
 using BensBlazorWebAssembly.Components;
 using BensBlazorWebAssembly.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using BensBlazorWebAssembly.Client.Api;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,9 +13,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
+var environment = builder.Environment;
+
+//  ADD HTTP CLIENT
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7093/") });
+
+
+// Register the VideoGameService
+builder.Services.AddScoped<IRestSharpHelper, RestSharpHelper>();
+builder.Services.AddScoped<IVideoGameService, VideoGameService>();
+
 // Add Controller Services
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning();
+
 
 // Register the Db context
 builder.Services.AddDbContext<Context>(options =>

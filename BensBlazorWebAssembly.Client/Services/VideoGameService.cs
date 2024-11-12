@@ -1,5 +1,8 @@
 ﻿using BensBlazorWebAssembly.Common.Entities;
 using System.Net.Http.Json;
+using BensBlazorWebAssembly.Client.Api;
+using RestSharp;
+using BensBlazorWebAssembly.Client.Pages;
 
 namespace BensBlazorWebAssembly.Client.Services
 {
@@ -10,15 +13,17 @@ namespace BensBlazorWebAssembly.Client.Services
         public Task<VideoGame> GetVideoGameAsync(int id);
         public Task<VideoGame> AddVideoGameAsync(VideoGame videoGame);
         public Task<VideoGame> UpdateVideoGameAsync(VideoGame videoGame);
-        public Task<VideoGame> DeleteVideoGameAsync(int id);
+        public Task<bool> DeleteVideoGameAsync(int id);
 
     }
     public class VideoGameService : IVideoGameService
     {
         private readonly HttpClient _httpClient;
-        public VideoGameService(HttpClient httpClient)
+        private IRestSharpHelper restSharpHelper { get; set; }
+        public VideoGameService(HttpClient httpClient, IRestSharpHelper restSharpHelper)
         {
             _httpClient = httpClient;
+            this.restSharpHelper = restSharpHelper;
         }
         public async Task<IEnumerable<VideoGame>> GetVideoGamesAsync()
         {
@@ -34,18 +39,33 @@ namespace BensBlazorWebAssembly.Client.Services
         }
         public async Task<VideoGame> AddVideoGameAsync(VideoGame videoGame)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/v1/VideoGames", videoGame);
-            return await response.Content.ReadFromJsonAsync<VideoGame>();
+            try
+            {
+                return await restSharpHelper.AsyncRequest<VideoGame>(Method.Post, "api/v1.0/VideoGames/new", videoGame);
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.Message;
+                return default;
+            }
+            
         }
         public async Task<VideoGame> UpdateVideoGameAsync(VideoGame videoGame)
         {
             var response = await _httpClient.PutAsJsonAsync($"api/v1/VideoGames/{videoGame.Id}", videoGame);
             return await response.Content.ReadFromJsonAsync<VideoGame>();
         }
-        public async Task<VideoGame> DeleteVideoGameAsync(int id)
+        public async Task<bool> DeleteVideoGameAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"api/v1/VideoGames/{id}");
-            return await response.Content.ReadFromJsonAsync<VideoGame>();
+            try
+            {
+                return await restSharpHelper.AsyncRequest(Method.Delete, $"api/v1/VideoGames/delete/{id}", null);
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.Message;
+                return false;
+            }
         }
     }
 }
